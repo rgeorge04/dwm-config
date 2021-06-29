@@ -76,35 +76,56 @@ static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "90x27"
 static const char *scrotcmd[]  = { "scrot", "-t", "25", NULL };
 static const char *scrotfocusedcmd[]  = { "scrot", "--focused", NULL };
 
+#include "shiftview.c"
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+
+	//dmenu
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
+	//spawn terminal
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+	//scratchpad
 	{ MODKEY,                       XK_grave,  togglescratch,  {.v = scratchpadcmd } },
+	//toggle bar
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	//stack focus
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+        { MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+	//shiftview
+	{ MODKEY,              		XK_x,      shiftview,      { .i = +1 } },
+	{ MODKEY,             	        XK_z,      shiftview,      { .i = -1 } },
+	//???
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
+	//adjust window size
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY,     		         XK_Return, zoom,           {0} },
+	//zoom?
+	{ MODKEY,     		        XK_Return, zoom,           {0} },
+	//tab
 	{ MODKEY,                       XK_Tab,    view,           {0} },
-	//kill 
+	//kill
 	{ MODKEY|ShiftMask,             XK_q,      killclient,     {0} },
         { MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
-	// print
+	// screenshot, print screen
 	{ 0,         		        XK_Print,  spawn,	   {.v = scrotcmd } },
 	{ ShiftMask,   		        XK_Print,  spawn,          {.v = scrotfocusedcmd } },
 	{ ControlMask,  		XK_Print,  spawn,          SHCMD("sleep 1s;scrot --select") },
+	//tile, floating or module
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	//toggle title, floating or module cycle
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
+	//toggle floating?
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
+	//fullscreen
 	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
+	//view all tags
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+	//????
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+	//????
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
@@ -114,6 +135,10 @@ static Key keys[] = {
 	{ MODKEY,                       XK_minus,  setgaps,        {.i = +2.5 } },
 	{ MODKEY|ShiftMask,             XK_minus,  setgaps,        {.i = GAP_RESET } },
 	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = GAP_TOGGLE} },
+	//quit
+        { MODKEY|ShiftMask,             XK_Delete,      quit,           {0} },
+
+	//tags
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -123,7 +148,6 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_Delete,      quit,           {0} },
 };
 
 /* button definitions */
