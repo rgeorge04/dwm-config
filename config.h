@@ -3,7 +3,7 @@
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const int startwithgaps	     = 1;	 /* 1 means gaps are used by default */
-static const unsigned int gappx     = 7.5;       /* default gap between windows in pixels */
+static const unsigned int gappx     = 5;       /* default gap between windows in pixels */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
@@ -26,7 +26,7 @@ static const char *colors[][3]      = {
 };
 
 static const char *const autostart[] = {
-//	"st", NULL,
+	"st", NULL,
 	"picom", NULL,
 	NULL /* terminate */
 };
@@ -51,7 +51,7 @@ static const int resizehints = 1;    /* 1 means respect size hints in tiled resi
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
-	{ "><>",      NULL },    /* no layout function means floating behavior */
+	{ ">0<",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
 };
 
@@ -68,11 +68,13 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char dmenuhp[] = "firefox,hexchat,pcmanfm,mousepad";
+static const char dmenuhp[] = "firefox,hexchat,pcmanfm,mousepad,discord";
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_main, "-sf", col_gray4, "-hp", dmenuhp, NULL };
 static const char *termcmd[]  = { "st", NULL };
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "90x27", NULL };
+static const char *scrotcmd[]  = { "scrot", "-t", "25", NULL };
+static const char *scrotfocusedcmd[]  = { "scrot", "--focused", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -86,9 +88,15 @@ static Key keys[] = {
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
-	{ MODKEY,                       XK_Return, zoom,           {0} },
+	{ MODKEY,     		         XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
+	//kill 
 	{ MODKEY|ShiftMask,             XK_q,      killclient,     {0} },
+        { MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
+	// print
+	{ 0,         		        XK_Print,  spawn,	   {.v = scrotcmd } },
+	{ ShiftMask,   		        XK_Print,  spawn,          {.v = scrotfocusedcmd } },
+	{ ControlMask,  		XK_Print,  spawn,          SHCMD("sleep 1s;scrot --select") },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
@@ -101,6 +109,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+	// gaps
 	{ MODKEY,                       XK_equal,  setgaps,        {.i = -2.5 } },
 	{ MODKEY,                       XK_minus,  setgaps,        {.i = +2.5 } },
 	{ MODKEY|ShiftMask,             XK_minus,  setgaps,        {.i = GAP_RESET } },
