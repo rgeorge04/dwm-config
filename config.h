@@ -38,8 +38,8 @@ static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
 	 */
-	/* class      instance    title       tags mask     iscentered   isfloating   monitor */
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           0,           -1 },
+	/* class      instance    title       tags mask    switchtotag   isfloating   monitor */
+	{ "Firefox",  NULL,       NULL,       1 << 8,           1,           0,           -1 },
 
 };
 
