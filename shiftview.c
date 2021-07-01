@@ -28,7 +28,6 @@ shiftviewclient(const Arg *arg)
 	Arg shifted;
 	Client *c;
 	unsigned int tagmask = 0;
-	int NUMTAGS = LENGTH(tags);
 	for (c = selmon->clients; c; c = c->next)
 		tagmask |= c->tags;
 

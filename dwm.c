@@ -59,6 +59,7 @@
 
 #define GAP_TOGGLE 100
 #define GAP_RESET  0
+#define NUMTAGS LENGTH(tags)
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
