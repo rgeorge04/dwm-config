@@ -1,4 +1,4 @@
-/* See LICENSE file for copyright and license details. */
+#include "include.h"
 
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
@@ -78,7 +78,7 @@ static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "90x27"
 static const char *scrotcmd[]  = { "scrot", "-t", "25", NULL };
 static const char *scrotfocusedcmd[]  = { "scrot", "--focused", NULL };
 
-#include "shiftview.c"
+
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 
@@ -97,8 +97,10 @@ static Key keys[] = {
 	//shiftview
 	{ MODKEY,              		XK_x,      shiftview,       { .i = +1 } },
 	{ MODKEY,             	        XK_z,      shiftview,       { .i = -1 } },
-	{ MODKEY|ShiftMask,             XK_x,      shiftviewclient, { .i = +1 } },
-	{ MODKEY|ShiftMask,             XK_z,      shiftviewclient, { .i = -1 } },
+	{ MODKEY|ControlMask,           XK_x,      shiftviewclient, { .i = +1 } },
+	{ MODKEY|ControlMask,           XK_z,      shiftviewclient, { .i = -1 } },
+        { MODKEY|ShiftMask,             XK_x,      shiftviewclient, { .i = +1 } },
+        { MODKEY|ShiftMask,             XK_z,      shiftviewclient, { .i = -1 } },
 	//???
 	{ MODKEY,                       XK_i,      incnmaster,      {.i = +1 } },
 	{ MODKEY,                       XK_d,      incnmaster,      {.i = -1 } },
