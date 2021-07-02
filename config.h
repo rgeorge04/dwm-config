@@ -73,7 +73,6 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char dmenuhp[] = "firefox,hexchat,pcmanfm,mousepad,discord,whatsapp,steam";
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_main, "-sf", col_gray4, "-hp", dmenuhp, NULL };
-//static const char *dmenudesktop[] = { "j4-dmenu-desktop", "--dmenu=dmenu_run -i", "--term='st'", NULL  };
 static const char *termcmd[]  = { "st", NULL };
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "90x27", NULL };
@@ -84,8 +83,10 @@ static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%"
 static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
 static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
 //brightness
-static const char *brightnessup[] = { "brightness", "up", NULL };
-static const char *brightnessdown[] = { "brightness", "down", NULL };
+static const char *brightnessup[] = { "xbacklight", "-inc", "5", NULL };
+static const char *brightnessdown[] = { "xbacklight", "-dec", "5", NULL };
+static const char *brightnessups[] = { "xbacklight", "-inc", "20", NULL };
+static const char *brightnessdowns[] = { "xbacklight", "-dec", "20", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -96,6 +97,8 @@ static Key keys[] = {
 	//fn brightness keybindings
 	{ 0,           XF86XK_MonBrightnessUp,     spawn,           {.v = brightnessup } },
 	{ 0,           XF86XK_MonBrightnessDown,   spawn,           {.v = brightnessdown } },
+        { MODKEY,                       XK_F12,    spawn,           {.v = brightnessups } },
+        { MODKEY,                       XK_F11,    spawn,           {.v = brightnessdowns } },
 	//dmenu
 	{ MODKEY,                       XK_p,      spawn,           {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,           SHCMD("j4-dmenu-desktop --dmenu=dmenu_run  --term='st'") },
