@@ -1,5 +1,5 @@
+#include <X11/XF86keysym.h>
 #include "include.h"
-
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const int startwithgaps	     = 0;	 /* 1 means gaps are used by default */
@@ -79,11 +79,23 @@ static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "90x27", NULL };
 static const char *scrotcmd[]  = { "scrot", "-t", "25", NULL };
 static const char *scrotfocusedcmd[]  = { "scrot", "--focused", NULL };
-
+// audio
+static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
+static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
+static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
+//brightness
+static const char *brightnessup[] = { "brightness", "up", NULL };
+static const char *brightnessdown[] = { "brightness", "down", NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-
+	// fn audio keybindings
+	{ 0,           XF86XK_AudioLowerVolume,    spawn,           {.v = downvol } },
+        { 0,           XF86XK_AudioMute,           spawn, 	    {.v = mutevol } },
+        { 0,           XF86XK_AudioRaiseVolume,    spawn, 	    {.v = upvol   } },
+	//fn brightness keybindings
+	{ 0,           XF86XK_MonBrightnessUp,     spawn,           {.v = brightnessup } },
+	{ 0,           XF86XK_MonBrightnessDown,   spawn,           {.v = brightnessdown } },
 	//dmenu
 	{ MODKEY,                       XK_p,      spawn,           {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,           SHCMD("j4-dmenu-desktop --dmenu=dmenu_run  --term='st'") },
@@ -106,6 +118,7 @@ static Key keys[] = {
 	//???
 	{ MODKEY,                       XK_i,      incnmaster,      {.i = +1 } },
 	{ MODKEY,                       XK_d,      incnmaster,      {.i = -1 } },
+
 	//adjust window size
 	{ MODKEY,                       XK_h,      setmfact,        {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,        {.f = +0.05} },
@@ -126,6 +139,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_t,      setlayout,       {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,       {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,       {.v = &layouts[2]} },
+
 	//toggle title, floating or module cycle
 	{ MODKEY,                       XK_space,  setlayout,       {0} },
 	//toggle floating?
