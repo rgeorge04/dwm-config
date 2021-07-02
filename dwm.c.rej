@@ -1,19 +1,48 @@
---- dwm.c	2019-02-02 15:55:28.000000000 +0300
-+++ dwm.c	2020-02-18 03:33:58.213447007 +0300
-@@ -1712,13 +1738,15 @@
- 		mw = m->ww;
- 	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
- 		if (i < m->nmaster) {
--			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
-+			h = (m->wh - my) * (c->cfact / mfacts);
- 			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
- 			my += HEIGHT(c);
-+			mfacts -= c->cfact;
- 		} else {
- 			h = (m->wh - ty) / (n - i);
- 			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), 0);
- 			ty += HEIGHT(c);
-+			sfacts -= c->cfact;
- 		}
+--- dwm.c
++++ dwm.c
+@@ -1664,11 +1667,45 @@ sigchld(int unused) {
+ 	while(0 < waitpid(-1, NULL, WNOHANG));
  }
  
++#define SPAWN_CWD_DELIM " []{}()<>\"':"
++
+ void
+ spawn(const Arg *arg) {
+ 	if(fork() == 0) {
+ 		if(dpy)
+ 			close(ConnectionNumber(dpy));
++		if(selmon->sel) {
++			const char* const home = getenv("HOME");
++			assert(home && strchr(home, '/'));
++			const size_t homelen = strlen(home);
++			char *cwd, *pathbuf = NULL;
++			struct stat statbuf;
++
++			cwd = strtok(selmon->sel->name, SPAWN_CWD_DELIM);
++			/* NOTE: strtok() alters selmon->sel->name in-place,
++			 * but that does not matter because we are going to
++			 * exec() below anyway; nothing else will use it */
++			while(cwd) {
++				if(*cwd == '~') { /* replace ~ with $HOME */
++					if(!(pathbuf = malloc(homelen + strlen(cwd)))) /* ~ counts for NULL term */
++						die("fatal: could not malloc() %u bytes\n", homelen + strlen(cwd));
++					strcpy(strcpy(pathbuf, home) + homelen, cwd + 1);
++					cwd = pathbuf;
++				}
++
++				if(strchr(cwd, '/') && !stat(cwd, &statbuf)) {
++					if(!S_ISDIR(statbuf.st_mode))
++						cwd = dirname(cwd);
++
++					if(!chdir(cwd))
++						break;
++				}
++
++				cwd = strtok(NULL, SPAWN_CWD_DELIM);
++			}
++
++			free(pathbuf);
++		}
+ 		setsid();
+ 		execvp(((char **)arg->v)[0], (char **)arg->v);
+ 		fprintf(stderr, "dwm: execvp %s", ((char **)arg->v)[0]);
