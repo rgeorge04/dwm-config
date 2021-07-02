@@ -39,7 +39,7 @@ diff -r 53d98940cb04 dwm.c
 @@ -816,6 +817,18 @@
  }
  
- void
++void
 +opacity(Client *c, double opacity)
 +{
 +	if(opacity >= 0 && opacity <= 1) {
@@ -51,7 +51,7 @@ diff -r 53d98940cb04 dwm.c
 +		XDeleteProperty(dpy, c->win, netatom[NetWMWindowsOpacity]);
 +}
 +
-+void
+ void
  focus(Client *c) {
  	if(!c || !ISVISIBLE(c))
  		for(c = selmon->stack; c && !ISVISIBLE(c); c = c->snext);

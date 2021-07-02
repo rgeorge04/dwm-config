@@ -1,66 +1,19 @@
---- dwm.c	2013-04-06 21:00:46.620830452 +0200
-+++ dwm.c	2011-12-19 16:02:46.000000000 +0100
-@@ -651,7 +648,6 @@ createmon(void) {
- 		die("fatal: could not malloc() %u bytes\n", sizeof(Monitor));
- 	m->tagset[0] = m->tagset[1] = 1;
- 	m->mfact = mfact;
--	m->smfact = smfact;
- 	m->nmaster = nmaster;
- 	m->showbar = showbar;
- 	m->topbar = topbar;
-@@ -1582,19 +1578,6 @@ setmfact(const Arg *arg) {
- }
- 
- void
--setsmfact(const Arg *arg) {
--	float sf;
--
--	if(!arg || !selmon->lt[selmon->sellt]->arrange)
--		return;
--	sf = arg->sf < 1.0 ? arg->sf + selmon->smfact : arg->sf - 1.0;
--	if(sf < 0 || sf > 0.9)
--		return;
--	selmon->smfact = sf;
--	arrange(selmon);
--}
--
--void
- setup(void) {
- 	XSetWindowAttributes wa;
- 
-@@ -1717,7 +1700,7 @@ textnw(const char *text, unsigned int le
- 
- void
- tile(Monitor *m) {
--	unsigned int i, n, h, smh, mw, my, ty;
-+	unsigned int i, n, h, mw, my, ty;
- 	Client *c;
- 
- 	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
-@@ -1735,23 +1718,9 @@ tile(Monitor *m) {
+--- dwm.c	2019-02-02 15:55:28.000000000 +0300
++++ dwm.c	2020-02-18 03:33:58.213447007 +0300
+@@ -1712,13 +1738,15 @@
+ 		mw = m->ww;
+ 	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+ 		if (i < m->nmaster) {
+-			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
++			h = (m->wh - my) * (c->cfact / mfacts);
+ 			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
  			my += HEIGHT(c);
- 		}
- 		else {
--			smh = m->mh * m->smfact;
--			if(!(nexttiled(c->next)))
--				h = (m->wh - ty) / (n - i);
--			else
--				h = (m->wh - smh - ty) / (n - i);
--			if(h < minwsz) {
--				c->isfloating = True;
--				XRaiseWindow(dpy, c->win);
--				resize(c, m->mx + (m->mw / 2 - WIDTH(c) / 2), m->my + (m->mh / 2 - HEIGHT(c) / 2), m->ww - mw - (2*c->bw), h - (2*c->bw), False);
--				ty -= HEIGHT(c);
--			}
--			else
--				resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), False);
--			if(!(nexttiled(c->next)))
--				ty += HEIGHT(c) + smh;
--			else
--				ty += HEIGHT(c);
-+			h = (m->wh - ty) / (n - i);
-+			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), False);
-+			ty += HEIGHT(c);
++			mfacts -= c->cfact;
+ 		} else {
+ 			h = (m->wh - ty) / (n - i);
+ 			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), 0);
+ 			ty += HEIGHT(c);
++			sfacts -= c->cfact;
  		}
  }
  
