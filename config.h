@@ -29,11 +29,12 @@ static const char *colors[][3]      = {
 static const char *const autostart[] = {
 	"st", NULL,
 	"picom", NULL,
+	"dwmblocks", NULL,
 	NULL /* terminate */
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "", "","", "" };
+static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -109,13 +110,21 @@ static Key keys[] = {
 	//stack focus
 	{ MODKEY,                       XK_j,      focusstack,      {.i = +1 } },
         { MODKEY,                       XK_k,      focusstack,      {.i = -1 } },
-	//shiftview
+
+	//shiftview z,x
 	{ MODKEY,              		XK_x,      shiftview,       { .i = +1 } },
 	{ MODKEY,             	        XK_z,      shiftview,       { .i = -1 } },
 	{ MODKEY|ControlMask,           XK_x,      shiftviewclient, { .i = +1 } },
 	{ MODKEY|ControlMask,           XK_z,      shiftviewclient, { .i = -1 } },
         { MODKEY|ShiftMask,             XK_x,      shiftviewclient, { .i = +1 } },
         { MODKEY|ShiftMask,             XK_z,      shiftviewclient, { .i = -1 } },
+	//shiftview ,,.
+	{ MODKEY|ShiftMask,             XK_period,      shiftview,       { .i = +1 } },
+        { MODKEY|ShiftMask,             XK_comma,      shiftview,       { .i = -1 } },
+        { MODKEY|ControlMask,           XK_period,      shiftview, { .i = +1 } },
+        { MODKEY|ControlMask,           XK_comma,      shiftview, { .i = -1 } },
+        { MODKEY,             		XK_period,      shiftviewclient, { .i = +1 } },
+        { MODKEY,             		XK_comma,      shiftviewclient, { .i = -1 } },
 	//???
 	{ MODKEY,                       XK_i,      incnmaster,      {.i = +1 } },
 	{ MODKEY,                       XK_d,      incnmaster,      {.i = -1 } },
@@ -152,11 +161,12 @@ static Key keys[] = {
 	{ MODKEY,                       XK_0,      view,            {.ui = ~0 } },
 	//????
 	{ MODKEY|ShiftMask,             XK_0,      tag,             {.ui = ~0 } },
-	//????
-	{ MODKEY,                       XK_comma,  focusmon,        {.i = -1 } },
-	{ MODKEY,                       XK_period, focusmon,        {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_comma,  tagmon,          {.i = -1 } },
-	{ MODKEY|ShiftMask,             XK_period, tagmon,          {.i = +1 } },
+
+	// initially set to XK_comma and XK_period
+	{ MODKEY,                       XK_VoidSymbol,  focusmon,        {.i = -1 } },
+	{ MODKEY,                       XK_VoidSymbol, focusmon,        {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_VoidSymbol,  tagmon,          {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_VoidSymbol, tagmon,          {.i = +1 } },
 	// gaps
 	{ MODKEY,                       XK_equal,  setgaps,         {.i = -2.5 } },
 	{ MODKEY,                       XK_minus,  setgaps,         {.i = +2.5 } },
