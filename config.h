@@ -126,8 +126,8 @@ static Key keys[] = {
         { MODKEY,             		XK_period,      shiftviewclient, { .i = +1 } },
         { MODKEY,             		XK_comma,      shiftviewclient, { .i = -1 } },
 	//???
-	{ MODKEY,                       XK_i,      incnmaster,      {.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,      {.i = -1 } },
+	{ MODKEY,                       XK_VoidSymbol,      incnmaster,      {.i = +1 } },
+	{ MODKEY,                       XK_VoidSymbol,      incnmaster,      {.i = -1 } },
 
 	//adjust window size
 	{ MODKEY,                       XK_h,      setmfact,        {.f = -0.05} },
